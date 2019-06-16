@@ -5,7 +5,8 @@ const state =
         variation: {},
         variationList: [],
         variationOrderQuantity: 1,
-        variationMarkInvalidProperties: false
+        variationMarkInvalidProperties: false,
+        isVariationSelected: true
     };
 
 const mutations =
@@ -46,6 +47,11 @@ const mutations =
         setVariationMarkInvalidProps(state, markFields)
         {
             state.variationMarkInvalidProperties = !!markFields;
+        },
+
+        setIsVariationSelected(state, isVariationSelected)
+        {
+            state.isVariationSelected = !!isVariationSelected;
         }
     };
 
@@ -133,7 +139,7 @@ const getters =
             if (state.variation.documents[0].data.properties)
             {
                 const orderPropertyList = state.variation.documents[0].data.properties.filter(property => property.property.isShownOnItemPage && property.property.isOderProperty);
-                const groupIds = [... new Set(orderPropertyList.map(property => property.group && property.group.id))];
+                const groupIds = [...new Set(orderPropertyList.map(property => property.group && property.group.id))];
                 const groups = [];
 
                 for (const id of groupIds)
@@ -183,11 +189,11 @@ const getters =
                         return null;
                     });
 
-                    radioInformation = [... new Set(radioInformation.filter(id => id))];
+                    radioInformation = [...new Set(radioInformation.filter(id => id))];
 
                     const radioIdsToRemove = [];
 
-                    for (const radioGroupId of [... new Set(radioInformation.map(radio => radio.groupId))])
+                    for (const radioGroupId of [...new Set(radioInformation.map(radio => radio.groupId))])
                     {
                         const radioGroupToClean = radioInformation.find(radio => radio.groupId === radioGroupId && radio.hasValue);
 
@@ -207,6 +213,11 @@ const getters =
             }
 
             return [];
+        },
+
+        currentItemVariation(state)
+        {
+            return state.variation.documents && state.variation.documents[0] && state.variation.documents[0].data;
         }
     };
 
